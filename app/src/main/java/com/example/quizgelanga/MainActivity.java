@@ -3,6 +3,7 @@ package com.example.quizgelanga;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -106,5 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         score = 0;
         currentQuestionIndex = 0;
         loadNewQuestion();
+        Intent intent = new Intent (MainActivity.this, MainActivity2.class);
+        startActivity(intent);
     }
 }
