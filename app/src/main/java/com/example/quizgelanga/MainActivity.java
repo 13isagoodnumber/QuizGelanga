@@ -9,21 +9,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA,ansB,ansC,ansD;
-    Button submitBtn;
 
-    int score=0;
+    int score=0, quiz;
     int totalQuestion= QuestionAnswer.question.length;
     int currentQuestionIndex = 0;
     String selectedAnswer = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -33,13 +34,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ansB = findViewById(R.id.ans_B);
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
-        submitBtn = findViewById(R.id.submit_btn);
+
 
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
+
 
         totalQuestionsTextView.setText("Total questions : "+totalQuestion);
 
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+
+        Toast.makeText(this, "Computing....", Toast.LENGTH_SHORT).show();
+        finishQuiz();
 
         ansA.setBackgroundColor(Color.WHITE);
         ansB.setBackgroundColor(Color.WHITE);
@@ -89,18 +93,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void finishQuiz(){
         String passStatus = "";
         if(score > totalQuestion*0.60){
-            passStatus = "Passed";
+
+            quiz = 1;
         }else {
-            passStatus = "Failed";
+
+            quiz = 2;
         }
 
-        new AlertDialog.Builder(this)
-                .setTitle(passStatus)
-                .setMessage("Score is "+score+"out of "+ totalQuestion)
-                .setPositiveButton("Restart", (dialogInterface, i) -> restartQuiz() )
-                .setCancelable(false)
-                .show();
+        switch (quiz) {
+            case 1:
+                passStatus = "Correct Answer";
+                break;
+            case 2:
+                passStatus = "Wrong Answer";
+                break;
+        }
 
+        Bundle args = new Bundle();
+        args.putString("result", passStatus);
+
+        Intent intent = new Intent(MainActivity.this, Result1.class);
+        intent.putExtras(args);
+        startActivity(intent);
     }
 
     void restartQuiz(){
